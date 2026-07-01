@@ -10,11 +10,12 @@ const app = express();
 const PORT = Number(process.env.PORT) || 3000;  // process.env.PORT è una variabile d'ambiente che Render mi passa quando avvio il server. Se non è definita, uso la porta 3000 di default.
 
 // Creo un client Redis usando l'URL definito nella variabile d'ambiente REDIS_URL
-const redisUrl = process.env.REDIS_URL;
+const redisUrl = process.env.REDIS_URL; // REDIS_URL è una variabile d'ambiente che contiene l'URL del server Redis. Render la definisce automaticamente quando creo un servizio Redis. Se non è definita, lancio un errore.
+// Se REDIS_URL non è definita, lancio un errore. Questo serve a evitare di avere un client Redis senza URL, che causerebbe errori difficili da capire.
 if (!redisUrl) {
   throw new Error("REDIS_URL non è definita");
 }
-const redisClient = createClient({
+const redisClient = createClient({  // creo un client Redis usando l'URL definito nella variabile d'ambiente REDIS_URL
   url: redisUrl,
 });
 
