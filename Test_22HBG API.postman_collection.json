@@ -1,0 +1,116 @@
+{
+  "info": {
+    "_postman_id": "90bd3334-24c3-45a2-a8ee-da0b4b1da1c9",
+    "name": "Test_22HBG API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "56318483"
+  },
+  "item": [
+    {
+      "name": "GET /posts",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://test-22hbg.onrender.com/posts",
+          "protocol": "https",
+          "host": [
+            "test-22hbg",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "posts"
+          ]
+        },
+        "description": "Restituisce l'elenco completo dei post letti dal feed esterno.\n\nMetodo: GET\n\nEndpoint: /posts\n\nRisposta:\n\n- 200 OK: elenco dei post in formato JSON.\n    \n- 500 Internal Server Error: errore durante il recupero del feed esterno."
+      },
+      "response": []
+    },
+    {
+      "name": "GET /posts-filtered?title=Google",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://test-22hbg.onrender.com/posts-filtered?title=Google",
+          "protocol": "https",
+          "host": [
+            "test-22hbg",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "posts-filtered"
+          ],
+          "query": [
+            {
+              "key": "title",
+              "value": "Google"
+            }
+          ]
+        },
+        "description": "Restituisce i post il cui titolo contiene la stringa specificata nel parametro `title`.\n\nMetodo: GET\n\nEndpoint: /posts-filtered\n\nParametro:\n\n- title (string): testo da ricercare nel titolo.\n    \n\nRisposta:\n\n- 200 OK: elenco dei post in formato JSON.\n    \n- 400 Bad Request: parametro `title` non valido.\n    \n- 500 Internal Server Error: errore interno del server."
+      },
+      "response": []
+    },
+    {
+      "name": "GET /posts-filtered?items=5",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://test-22hbg.onrender.com/posts-filtered?items=5",
+          "protocol": "https",
+          "host": [
+            "test-22hbg",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "posts-filtered"
+          ],
+          "query": [
+            {
+              "key": "items",
+              "value": "5"
+            }
+          ]
+        },
+        "description": "Restituisce al massimo il numero di post specificato dal parametro `items`.\n\nMetodo: GET\n\nEndpoint: /posts-filtered\n\nParametro:\n\n- `items` (number): numero massimo di post da restituire.\n    \n\nRisposta:\n\n- 200 OK: elenco dei post in formato JSON.\n    \n- 400 Bad Request: parametro `items` non valido.\n    \n- 500 Internal Server Error: errore interno del server."
+      },
+      "response": []
+    },
+    {
+      "name": "GET /posts-filtered?title=Google&items=5",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://test-22hbg.onrender.com/posts-filtered?title=Google&items=5",
+          "protocol": "https",
+          "host": [
+            "test-22hbg",
+            "onrender",
+            "com"
+          ],
+          "path": [
+            "posts-filtered"
+          ],
+          "query": [
+            {
+              "key": "title",
+              "value": "Google"
+            },
+            {
+              "key": "items",
+              "value": "5"
+            }
+          ]
+        },
+        "description": "Restituisce i post il cui titolo contiene la stringa specificata nel parametro `title`, limitando il numero di risultati in base al parametro `items`.\n\nMetodo: GET\n\nEndpoint: /posts-filtered\n\nParametri:\n\n- `title` (string): testo da ricercare nel titolo.\n    \n- `items` (number): numero massimo di post da restituire.\n    \n\nRisposta:\n\n- 200 OK: elenco dei post in formato JSON.\n    \n- 400 Bad Request: uno o più parametri non validi.\n    \n- 500 Internal Server Error: errore interno del server."
+      },
+      "response": []
+    }
+  ]
+}
