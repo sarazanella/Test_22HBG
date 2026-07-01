@@ -6,9 +6,11 @@ interface Post {
     rendered: string;
   };
 }
+console.log("REDIS_URL:", process.env.REDIS_URL);
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;  // process.env.PORT è una variabile d'ambiente che Render mi passa quando avvio il server. Se non è definita, uso la porta 3000 di default.
-const redisClient = createClient();
+
+const redisClient = createClient({ url: process.env.REDIS_URL,});
 // Gestione degli errori di connessione a Redis
 redisClient.on('error', (err) => {
   console.error('Errore Redis:', err);
@@ -22,6 +24,10 @@ const CACHE_SECONDS_TIMER = 60;
 app.get('/posts', async (req: Request, res: Response) => {
   try {
     const risposta = await fetch(FEED_URL);
+    // Controllo se la risposta HTTP è ok (status 200-299). Se no, lancio un errore
+    if (!risposta.ok) {
+      throw new Error(`Errore HTTP ${risposta.status}`);
+    }
     const posts = await risposta.json();
     res.json(posts);        // perché ora la risposta è un oggetto/lista, non una semplice stringa. 
                             // Express si occupa lui di trasformarla nel formato giusto.
