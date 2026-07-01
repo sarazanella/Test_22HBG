@@ -66,6 +66,9 @@ app.get('/posts-filtered', async (req: Request, res: Response) => {
       console.log('Post letti dal feed esterno');
       
       const risposta = await fetch(FEED_URL); //fetch va a prendere dati da internet.
+      if (!risposta.ok) {
+        throw new Error(`Errore HTTP ${risposta.status}`);
+      }
       posts = await risposta.json();
 
       // Salvo i post in cache
