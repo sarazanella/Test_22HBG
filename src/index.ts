@@ -6,11 +6,24 @@ interface Post {
     rendered: string;
   };
 }
+
+// Log della variabile d'ambiente REDIS_URL per debug
 console.log("REDIS_URL:", process.env.REDIS_URL);
+
+
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;  // process.env.PORT è una variabile d'ambiente che Render mi passa quando avvio il server. Se non è definita, uso la porta 3000 di default.
 
-const redisClient = createClient({ url: process.env.REDIS_URL,});
+// Creo un client Redis usando l'URL definito nella variabile d'ambiente REDIS_URL
+const redisUrl = process.env.REDIS_URL;
+if (!redisUrl) {
+  throw new Error("REDIS_URL non è definita");
+}
+const redisClient = createClient({
+  url: redisUrl,
+});
+
+
 // Gestione degli errori di connessione a Redis
 redisClient.on('error', (err) => {
   console.error('Errore Redis:', err);
