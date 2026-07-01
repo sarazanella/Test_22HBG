@@ -6,11 +6,6 @@ interface Post {
     rendered: string;
   };
 }
-
-// Log della variabile d'ambiente REDIS_URL per debug
-console.log("REDIS_URL:", process.env.REDIS_URL);
-
-
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;  // process.env.PORT è una variabile d'ambiente che Render mi passa quando avvio il server. Se non è definita, uso la porta 3000 di default.
 
