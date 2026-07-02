@@ -40,5 +40,6 @@ Il progetto utilizza le seguenti variabili:
 
 ## Database
 Per il requisito bonus ho integrato un database MySQL tramite Prisma ORM.
-
-
+Variabili:
+- DATABASE_URL: URL di connessione al database MySQL.
+- REDIS_URL: URL di connessione a Redis.
