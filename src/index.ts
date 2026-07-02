@@ -219,10 +219,16 @@ app.get("/posts-db", async (req: Request, res: Response) => {
 
 
 // Avvio il server sulla porta definita
-async function startServer(){
+async function startServer() {
   await redisClient.connect();
+
   app.listen(PORT, () => {
     console.log(`Server avviato su http://localhost:${PORT}`);
   });
 }
-startServer();
+// Esporto l'applicazione Express per poterla usare in altri moduli (per i test)
+export { app, redisClient, prisma };
+// Se il file viene eseguito direttamente (non importato come modulo), avvio il server
+if (require.main === module) {
+  startServer();
+}

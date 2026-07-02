@@ -6,7 +6,8 @@
   "scripts": {
     "build": "prisma generate --config prisma.config.ts && tsc",
     "start": "node dist/index.js",
-    "dev": "npm run build && npm start"
+    "dev": "npm run build && npm start",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -21,7 +22,12 @@
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
     "@types/node": "^26.0.1",
+    "@types/supertest": "^7.2.0",
+    "jest": "^30.4.2",
+    "supertest": "^7.2.2",
+    "ts-jest": "^29.4.11",
     "typescript": "^6.0.3"
   },
   "engines": {

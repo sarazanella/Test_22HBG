@@ -10,6 +10,7 @@
     "module": "commonjs",
     "target": "ES2022", // "ES2022" è l'ultima versione di ECMAScript supportata da Node.js 18, che è la versione di Node.js che Render utilizza. Per usare una versione più vecchia di ECMAScript, modificare qui.
     "types": ["node"],
+    "ignoreDeprecations": "6.0",  // Ignora i warning di deprecazione di Node.js 18. Per vedere i warning, rimuovere questa riga.
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],
