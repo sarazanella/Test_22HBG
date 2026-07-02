@@ -1,0 +1,61 @@
+services:
+  app:
+    # Costruisce l'immagine del container a partire dal Dockerfile presente nella directory corrente.
+    build: .  
+    # Espone la porta 3000 del container sulla porta 3000 della macchina host, permettendo di accedere all'applicazione tramite http://localhost:3000.
+    ports:
+      - "3000:3000"
+    # Imposta le variabili d'ambiente necessarie per l'applicazione, come la porta su cui ascoltare, l'URL di Redis e l'URL del database MySQL.
+    environment:
+      PORT: 3000  
+      REDIS_URL: redis://redis:6379
+      DATABASE_URL: mysql://root:rootpassword@db:3306/tirocinio_db
+    # Definisce le dipendenze del servizio app, specificando che deve attendere che i servizi Redis e db siano avviati e pronti prima di partire.
+    depends_on:
+      redis:
+        condition: service_started
+      db:
+        condition: service_healthy
+    # Esegue il comando per sincronizzare il database con Prisma e avviare l'applicazione.
+    command: sh -c "npx prisma db push --config prisma.config.ts && npm start"
+
+# Definisce il servizio Redis, utilizzando l'immagine ufficiale di Redis versione 7 basata su Alpine Linux. 
+# Espone la porta 6379 del container sulla porta 6379 della macchina host.
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+# Definisce il servizio del database MariaDB, utilizzando l'immagine ufficiale di MariaDB versione 11.
+# Imposta le variabili d'ambiente per la password di root e il nome del database. 
+# Espone la porta 3307 del container sulla porta 3306 della macchina host e monta un volume per la 
+# persistenza dei dati del database.
+  db:
+    image: mariadb:11
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpassword
+      MARIADB_DATABASE: tirocinio_db
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    # Definisce un healthcheck per il servizio db, che esegue lo script healthcheck.sh con i parametri --connect e --innodb_initialized.
+    healthcheck:
+      # test ha come struttura un array che contiene il comando da eseguire per verificare lo stato di salute del servizio. 
+      # In questo caso, viene eseguito lo script healthcheck.sh con i parametri --connect e --innodb_initialized.
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      # interval specifica l'intervallo di tempo tra un controllo e l'altro. In questo caso, il controllo viene eseguito ogni 5 secondi.
+      interval: 5s
+      # timeout specifica il tempo massimo che il controllo può impiegare prima di considerarlo fallito. In questo caso, il timeout è di 5 secondi.
+      timeout: 5s
+      # retries specifica il numero di tentativi che il controllo può fare prima di considerare il servizio non sano. 
+      # In questo caso, il servizio viene considerato non sano dopo 10 tentativi falliti.
+      retries: 10
+      # start_period specifica il periodo di tempo iniziale durante il quale i controlli di salute non vengono considerati. 
+      # In questo caso, il periodo iniziale è di 10 secondi, durante i quali il servizio può avviarsi senza 
+      #che i controlli di salute vengano considerati falliti
+      start_period: 10s
+
+# Definisce un volume Docker chiamato db_data per la persistenza dei dati del database MariaDB.
+volumes:
+  db_data:

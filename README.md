@@ -83,3 +83,11 @@ REDIS_URL
 PORT
 
 In produzione serve un database online raggiungibile dal servizio cloud.
+
+## Docker
+Il progetto prevede un ambiente Docker completo con:
+- applicazione Node.js;
+- Redis;
+- MariaDB.
+
+Per avviare l'ambiente: `docker compose up --build`
