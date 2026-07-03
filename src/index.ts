@@ -24,20 +24,31 @@ interface FeedPost {
 
 // Creo un'istanza di Express per gestire le richieste HTTP
 const app = express();
-// Creo un'istanza di PrismaClient per interagire con il database, usando l'adapter MariaDB e le informazioni di connessione prese dalla variabile d'ambiente DATABASE_URL
+// Creo un'istanza di PrismaClient per interagire con il database, usando l'adapter MariaDB e le informazioni di 
+// connessione prese dalla variabile d'ambiente DATABASE_URL
 const databaseUrl = new URL(process.env.DATABASE_URL!);
+// Controllo se la connessione al database deve usare SSL, basandomi sulla variabile d'ambiente DATABASE_SSL o 
+// sul parametro sslaccept dell'URL del database. Se DATABASE_SSL è impostata a "true" o se sslaccept è "strict", 
+// allora uso SSL. SSL è un protocollo di sicurezza che cripta i dati trasmessi tra il server e il client, 
+// proteggendo le informazioni sensibili.
+const useSsl =
+  process.env.DATABASE_SSL === "true" ||
+  databaseUrl.searchParams.get("sslaccept") === "strict";
 // Metto host, port, user, password e database in un oggetto adapter per PrismaMariaDb. 
 // Uso decodeURIComponent per decodificare eventuali caratteri speciali nell'username e nella password. 
-// Uso slice(1) per rimuovere il primo carattere '/' dal pathname, che rappresenta il nome del database.
+// Uso databaseUrl.pathname.slice(1) per ottenere il nome del database senza lo slash iniziale.
+// Se useSsl è true, aggiungo l'opzione ssl: true all'oggetto adapter.
 const adapter = new PrismaMariaDb({
   host: databaseUrl.hostname,
   port: Number(databaseUrl.port || 3306),
   user: decodeURIComponent(databaseUrl.username),
   password: decodeURIComponent(databaseUrl.password),
   database: databaseUrl.pathname.slice(1),
+  ...(useSsl ? { ssl: true } : {}),
 });
+// Creo un'istanza di PrismaClient usando l'adapter MariaDB appena creato. PrismaClient è la classe principale 
+// di Prisma che permette di interagire con il database in modo semplice e tipizzato.
 const prisma = new PrismaClient({ adapter });
-
 
 const PORT = Number(process.env.PORT) || 3000;  // process.env.PORT è una variabile d'ambiente che Render mi passa quando avvio il server. Se non è definita, uso la porta 3000 di default.
 // Creo un client Redis usando l'URL definito nella variabile d'ambiente REDIS_URL
